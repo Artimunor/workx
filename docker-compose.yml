@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  redis:
+    container_name: redis-ssi
+    image: redis
+    restart: always
+    command: redis-server --requirepass admin
+    ports:
+      - '6379:6379'
+
+  postgres:
+    container_name: postgres-ssi
+    image: postgres:12
+    restart: always
+    volumes:
+      - postgres-ssi:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: auth
+    networks:
+      - postgres
+
+volumes:
+  postgres: {}
+
+networks:
+  postgres:
+    driver: bridge
