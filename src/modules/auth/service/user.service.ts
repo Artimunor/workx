@@ -3,8 +3,6 @@ import { GraphQLResolveInfo } from 'graphql';
 import { getManager } from 'typeorm';
 import { v4 } from 'uuid';
 import { parseResolveInfo } from '../../../shared/util/parse-resolve-info';
-import { PersonEntity } from '../../unit/entity/person.entity';
-import { UnitCategory, UnitEntity } from '../../unit/entity/unit.entity';
 import { RoleEntity } from '../entity/role.entity';
 import { UserEntity } from '../entity/user.entity';
 import { UserInput } from '../input/user.input';
@@ -97,23 +95,13 @@ export class UserService {
   ): Promise<UserEntity> {
     const key = v4();
 
-    const unit = new UnitEntity();
-    unit.key = key;
-    unit.name = email;
-    unit.category = UnitCategory.PERSON;
-
     const user = new UserEntity();
     user.email = email;
     user.password = password;
     user.unitKey = key;
 
-    const person = new PersonEntity();
-
     return await getManager().transaction(
       async (transactionalEntityManager) => {
-        const savedUnit = await transactionalEntityManager.save(unit);
-        person.unit = savedUnit;
-        await transactionalEntityManager.save(person);
         return await transactionalEntityManager.save(user);
       },
     );
@@ -134,11 +122,6 @@ export class UserService {
       return null;
     }
 
-    let unit = undefined;
-    if (user.unitKey) {
-      unit = await UnitEntity.findOne({ key: user.unitKey });
-    }
-
     if (ui.firstName) {
       user.firstName = ui.firstName;
     }
@@ -151,15 +134,6 @@ export class UserService {
       user.lastName = ui.lastName;
     }
 
-    if (unit && (ui.firstName || ui.middleName || ui.lastName)) {
-      unit.name =
-        (ui.firstName
-          ? ui.firstName + (ui.middleName || ui.lastName ? ' ' : '')
-          : '') +
-        (ui.middleName ? ui.middleName + (ui.lastName ? ' ' : '') : '') +
-        (ui.lastName ? ui.lastName : '');
-    }
-
     if (ui.email) {
       user.email = ui.email;
     }
@@ -170,9 +144,6 @@ export class UserService {
 
     return await getManager().transaction(
       async (transactionalEntityManager) => {
-        if (ui.firstName || ui.middleName || ui.lastName) {
-          await transactionalEntityManager.save(unit);
-        }
         return await transactionalEntityManager.save(user);
       },
     );
