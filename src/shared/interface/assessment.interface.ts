@@ -1,18 +1,18 @@
-interface assessment {
-  name: string; //sourceUnit
-  providerName: string; //sourceUnit or assessmentCompany
-  completedDate: Date; //measuredOn
+import { Measurement } from './measurement.interface';
 
-  value: number; //
-  //standardizedValue
+export interface Assessment {
+  // Name of the assessment
+  name: string;
 
-  scale: string; //Scale
+  // Person or Company that provided the assessment
+  providerName: string;
 
-  //measurementCategory?
-  // ASSESSMENT = 'ASSESSMENT',
-  // ENDORSEMENT = 'ENDORSEMENT',
-  // SELFASSIGNED = 'SELFASSIGNED',
-  //measurementType?
+  // Date when the Assessment was completed
+  completedDate: Date;
 
-  //measuredValue
+  // Type of the assessment
+  type: string;
+
+  // Measurements on the assessment
+  measurements: Measurement[];
 }
