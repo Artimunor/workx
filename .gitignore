@@ -63,3 +63,5 @@ lerna-debug.log*
 
 # Query files
 /queries
+
+/.vscode
