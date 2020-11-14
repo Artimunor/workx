@@ -1,6 +1,6 @@
 export interface SessionVerifyModel {
   '@context': string[];
-  predicate: string;
+  predicate: any;
   correlationGroup?: string;
   allowedIssuers: string[]
 }
