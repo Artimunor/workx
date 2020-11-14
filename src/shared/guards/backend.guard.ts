@@ -2,7 +2,6 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class BackendGuard implements CanActivate {
@@ -17,9 +16,8 @@ export class BackendGuard implements CanActivate {
   ): Promise<boolean> {
 
     const request = context.switchToHttp().getRequest<Request>();
-    const token = request.headers.Authorization?.toString()?.replace('Bearer', '').trim();
+    const token = request.headers.authorization?.toString()?.replace('Bearer', '').trim();
     const acceptedToken = this.configService.get('BACKEND_TOKEN')
-    // return token === acceptedToken;
-    return true;
+    return token === acceptedToken;
   }
 }

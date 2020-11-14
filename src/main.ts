@@ -29,7 +29,7 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(4000);
+  await app.listen(configService.get('SERVER_PORT'));
 
   Logger.log(`Server is running on: ${await app.getUrl()}`, 'main');
 }

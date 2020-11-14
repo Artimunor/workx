@@ -6,9 +6,8 @@ export interface SessionVerifyModel {
 }
 
 export interface SessionAttestModel {
-  [context: string]: { [key: string]: any }
+  [context: string]: { predicates: { [key: string]: any } }
 }
-
 
 export interface SessionDocumentModel {
   toAttest: SessionAttestModel;

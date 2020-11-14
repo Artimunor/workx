@@ -1,14 +1,14 @@
 import { HttpService, Injectable } from "@nestjs/common";
 import { AxiosResponse } from "axios";
 
-import { IssueTransactionStatusResponseModel, SessionDocumentModel, SessionResponseModel, VerifyTransactionStatusResponseModel } from "../model/RabobankApi.model";
+import { IssueTransactionStatusResponseModel, SessionAttestModel, SessionDocumentModel, SessionResponseModel, VerifyTransactionStatusResponseModel } from "../model/RabobankApi.model";
 
 @Injectable()
 export class RapbobankApiService {
   constructor(private httpService: HttpService) { }
 
-  createSession(issueDocument: SessionDocumentModel): Promise<AxiosResponse<SessionResponseModel>> {
-    return this.httpService.post<SessionResponseModel>('/sessions', issueDocument).toPromise();
+  createSession(toAttestIssue: SessionAttestModel): Promise<AxiosResponse<SessionResponseModel>> {
+    return this.httpService.post<SessionResponseModel>('/sessions', { toAttest: toAttestIssue, toVerify: [], userId: 'workpi' }).toPromise();
   }
 
   getIssueStatus(transactionId: string): Promise<AxiosResponse<IssueTransactionStatusResponseModel[]>> {

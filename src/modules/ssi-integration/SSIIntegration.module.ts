@@ -7,7 +7,6 @@ import { CareerWalletService } from './service/CareerWallet.service';
 import { QRCodeService } from './service/QRCode.service';
 import { RapbobankApiService } from './service/RabobankApi.service';
 
-
 @Module({
   imports: [
     HttpModule.registerAsync({

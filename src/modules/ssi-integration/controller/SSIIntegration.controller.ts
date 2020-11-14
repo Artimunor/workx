@@ -1,6 +1,7 @@
-import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
-import { Request, Response } from 'express';
+import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { BackendGuard } from "src/shared/guards/backend.guard";
+import { Assessment } from "src/shared/interface/assessment.interface";
+import { SessionAttestModel } from "../model/RabobankApi.model";
 
 import { CareerWalletService } from "../service/CareerWallet.service";
 import { QRCodeService } from "../service/QRCode.service";
@@ -11,28 +12,20 @@ import { RapbobankApiService } from "../service/RabobankApi.service";
 export class SSIIntegrationController {
   constructor(
     private readonly qrCodeService: QRCodeService,
-    private rabobankApiService: RapbobankApiService,
-    private careerWalletService: CareerWalletService,
+    private readonly rabobankApiService: RapbobankApiService,
+    private readonly careerWalletService: CareerWalletService,
   ) { }
 
-  @Get('qr')
-  async getQR(@Req() req: Request, @Res() res: Response) {
-    const sub = await this.rabobankApiService.createSession({
-      toAttest: {
-        ID: {
-          predicates: {
-            name: 'darius'
-          }
-        }
-      },
-      toVerify: [],
-      userId: 'uuid123'
-    });
-
+  @Post('create-session')
+  async createSession(@Body() assessment: Assessment) {
+    const toAttest: SessionAttestModel = {
+      Assessment: {
+        predicates: assessment
+      }
+    }
+    const sub = await this.rabobankApiService.createSession(toAttest);
     const payload = this.careerWalletService.generateQRPayload(sub.data.qrcode);
-
-    const QRCodeurl = await this.qrCodeService.generateQRCodeURL(payload)
-
-    return res.send(QRCodeurl);
+    const QRCodeUrl = await this.qrCodeService.generateQRCodeURL(payload);
+    return { qrcode: QRCodeUrl, transactionId: sub.data.transactionId, sessionId: sub.data.sessionId };
   }
 }
