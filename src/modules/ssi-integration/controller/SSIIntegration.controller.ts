@@ -16,8 +16,8 @@ export class SSIIntegrationController {
     private readonly careerWalletService: CareerWalletService,
   ) { }
 
-  @Post('create-session')
-  async createSession(@Body() assessment: Assessment) {
+  @Post('ssi')
+  async createSSI(@Body() assessment: Assessment) {
     const toAttest: SessionAttestModel = {
       Assessment: {
         predicates: assessment
