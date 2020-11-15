@@ -30,8 +30,9 @@ export class RapbobankApiService {
 
   createVerifyObject(assessment: Assessment): SessionVerifyModel[] {
     return Object.keys(assessment)
+      .filter((key: keyof Assessment) => key !== 'groupingKey')
       .reduce((acc, key) => ([...acc, {
-        '@context': ['Assessment'],
+        '@context': [assessment.groupingKey],
         predicate: key,
         correlationGroup: "1",
         allowedIssuers: [this.configService.get('RABOBANK_DID_ISSUER')]
