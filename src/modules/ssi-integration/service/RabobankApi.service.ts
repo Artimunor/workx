@@ -37,4 +37,16 @@ export class RapbobankApiService {
         allowedIssuers: [this.configService.get('RABOBANK_DID_ISSUER')]
       } as SessionVerifyModel]), [])
   }
+
+  createAttestObject(assessment: Assessment): SessionAttestModel {
+    const { name, groupingKey, providerName, completedDate, type, measurements } = assessment;
+
+    return {
+      [groupingKey]: {
+        predicates: {
+          name, providerName, completedDate, type, measurements
+        }
+      }
+    }
+  }
 }

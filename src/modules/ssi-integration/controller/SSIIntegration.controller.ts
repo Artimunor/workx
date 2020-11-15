@@ -19,11 +19,7 @@ export class SSIIntegrationController {
 
   @Post('create-ssi')
   async createSSI(@Body() assessment: Assessment) {
-    const toAttest: SessionAttestModel = {
-      Assessment: {
-        predicates: assessment
-      }
-    }
+    const toAttest = await this.rabobankApiService.createAttestObject(assessment);
     const request = await this.rabobankApiService.createSession(toAttest);
     const payload = this.careerWalletService.generateQRPayload(request.data.qrcode, CareerWalletOperationTypeModel.issuing);
     const QRCodeUrl = await this.qrCodeService.generateQRCodeURL(payload);

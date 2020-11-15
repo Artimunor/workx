@@ -4,6 +4,9 @@ export interface Assessment {
   // Name of the assessment
   name: string;
 
+  // Key that groups the measurements
+  groupingKey: string;
+
   // Person or Company that provided the assessment
   providerName: string;
 
